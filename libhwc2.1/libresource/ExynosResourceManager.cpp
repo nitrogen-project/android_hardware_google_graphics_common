@@ -1252,7 +1252,7 @@ void ExynosResourceManager::getCandidateScalingM2mMPPOutImages(
 
         const float otfSrcWidth = float(srcWidth / m2mMppRatio);
         const float scaleRatio_H = otfSrcWidth / float(dst_img.w);
-        const float otfSrcHeight = float(srcWidth / m2mMppRatio);
+        const float otfSrcHeight = float(srcHeight / m2mMppRatio);
         const float scaleRatio_V = otfSrcHeight / float(dst_img.h);
         const float displayRatio_V = float(dst_img.h) / float(display->mYres);
         const float resolution = otfSrcWidth * otfSrcHeight * display->getBtsRefreshRate() / 1000;
@@ -1946,7 +1946,8 @@ int32_t ExynosResourceManager::preAssignResources()
                     if (display->mDisplayControl.forceReserveMPP ||
                         (display->mPlugState &&
                          ((display->mType != HWC_DISPLAY_PRIMARY) ||
-                          (display->mPowerModeState != HWC2_POWER_MODE_OFF)))) {
+                          (display->mPowerModeState.has_value() &&
+                           (display->mPowerModeState.value() != HWC2_POWER_MODE_OFF))))) {
                         HDEBUGLOGD(eDebugResourceManager, "\t\treserve to display %d", display->mDisplayId);
                         mOtfMPPs[i]->reserveMPP(display->mDisplayId);
                         break;
@@ -2313,7 +2314,7 @@ void ExynosResourceManager::setScaleDownRatio(uint32_t physicalType,
     }
 }
 
-int32_t  ExynosResourceManager::prepareResources()
+int32_t ExynosResourceManager::prepareResources()
 {
     int ret = NO_ERROR;
     HDEBUGLOGD(eDebugResourceManager, "This is first validate");

@@ -318,7 +318,7 @@ class ExynosDisplayDrmInterface :
             return NO_ERROR;
         }
         int32_t getFrameCount() { return mFrameCounter; }
-        virtual void registerHistogramInfo(IDLHistogram *info) { return; }
+        virtual void registerHistogramInfo(const std::shared_ptr<IDLHistogram> &info) { return; }
         virtual int32_t setHistogramControl(hidl_histogram_control_t enabled) { return NO_ERROR; }
         virtual int32_t setHistogramData(void *bin) { return NO_ERROR; }
         int32_t getActiveModeHDisplay() { return mActiveModeState.mode.h_display(); }
@@ -326,6 +326,7 @@ class ExynosDisplayDrmInterface :
         int32_t panelHsize() { return mPanelResolutionHsize; }
         int32_t panelVsize() { return mPanelResolutionVsize; }
         int32_t getPanelResolution();
+        uint32_t getCrtcId() { return mDrmCrtc->id(); }
 
     protected:
         enum class HalMipiSyncType : uint32_t {
